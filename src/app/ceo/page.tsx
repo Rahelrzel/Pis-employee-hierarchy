@@ -156,7 +156,7 @@ const CeoPage = () => {
         <main className={classes.main}>
           <Flex direction={"column"} gap={"xl"}>
             <p className="text-4xl font-medium #16a34a text-emerald-600">
-              Welcome, NAOL!
+              Welcome,
             </p>
             <Flex direction={"row"} gap={"md"}>
               <Flex
@@ -188,7 +188,13 @@ const CeoPage = () => {
             </Flex>
             <Flex direction={"row"} gap={"md"}>
               {" "}
-              <Input placeholder="Input component" />
+              <Input
+                classNames={{
+                  input:
+                    "border-black-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm",
+                }}
+                placeholder="Search"
+              />
               <RoleFilter roles={roles} onFilterChange={handleFilterChange} />
               <Container>
                 <AddStuffButton onClick={handleAddStuffClick} />

@@ -6,7 +6,7 @@ interface RoleFilterProps {
   onFilterChange: (selectedRole: string) => void;
 }
 
-const RoleFilter: React.FC<RoleFilterProps> = ({ roles, onFilterChange }) => {
+function RoleFilter({ roles, onFilterChange }: RoleFilterProps) {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
   const handleChange = (value: string | null) => {
@@ -27,6 +27,6 @@ const RoleFilter: React.FC<RoleFilterProps> = ({ roles, onFilterChange }) => {
       clearable
     />
   );
-};
+}
 
 export default RoleFilter;

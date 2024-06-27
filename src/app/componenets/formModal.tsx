@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, TextInput, Button, Group } from "@mantine/core";
+import { Modal, TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
@@ -33,21 +33,25 @@ const FormModal = ({ isOpen, onClose, onSubmit }: FormModalProps) => {
   return (
     <Modal opened={isOpen} onClose={onClose} title="Add New Stuff">
       <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <TextInput
-          label="Name"
-          placeholder="Enter name"
-          {...register("name")}
-          error={errors.name?.message}
-        />
-        <TextInput
-          label="Description"
-          placeholder="Enter description"
-          {...register("description")}
-          error={errors.description?.message}
-        />
-        <Group>
-          <Button type="submit">Submit</Button>
-        </Group>
+        <Flex direction={"column"} gap={"md"}>
+          <TextInput
+            label="Name"
+            placeholder="Enter name"
+            {...register("name")}
+            error={errors.name?.message}
+          />
+          <TextInput
+            label="Description"
+            placeholder="Enter description"
+            {...register("description")}
+            error={errors.description?.message}
+          />
+          <Group>
+            <Button color="green" type="submit">
+              Submit
+            </Button>
+          </Group>
+        </Flex>
       </form>
     </Modal>
   );

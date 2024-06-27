@@ -17,6 +17,7 @@ interface EmployeeTableProps {
 function EmployeeTable({ data }: EmployeeTableProps) {
   const rows = data.map((item) => (
     <Table.Tr key={item.id}>
+      <Table.Td>{item.id}</Table.Td>
       <Table.Td>
         <Text size="sm" fw={500}>
           {item.name}
@@ -32,6 +33,7 @@ function EmployeeTable({ data }: EmployeeTableProps) {
       <Table miw={800} verticalSpacing="sm">
         <Table.Thead>
           <Table.Tr>
+            <Table.Th>NO</Table.Th>
             <Table.Th>Name</Table.Th>
             <Table.Th>Description</Table.Th>
             <Table.Th>Salary</Table.Th>

@@ -1,17 +1,22 @@
 "use client";
+
 import {
   Button,
   Card,
   Flex,
+  Group,
   PasswordInput,
   Text,
   TextInput,
 } from "@mantine/core";
 import React from "react";
 import { z } from "zod";
+
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
-import { FieldValue, FieldValues, useForm } from "react-hook-form";
-import { error } from "console";
+import classes from "./NavbarSimple.module.css";
+import { useDispatch } from "react-redux";
+import { login } from "@/redux/features/auth-slice";
 
 const schema = z.object({
   email: z
@@ -25,54 +30,70 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const Login_page = () => {
+const LoginPage = () => {
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  const onSubmit = (data: FieldValues) => console.log(data);
+  const onSubmit = (data: FormData) => {
+    dispatch(login(data));
+  };
   return (
-    <>
-      <Flex
-        justify="center"
-        align="center"
-        style={{ minHeight: "100vh", backgroundColor: "#f3f4f6" }}
-      >
-        <Card shadow="sm" padding="lg" className="border-x-green-600">
-          <Flex gap={5} direction={"column"} justify="center" align="center">
-            <h2 className="text-xl font-semibold mb-6 text-center">Login</h2>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Flex direction={"column"} gap={"lg"}>
-                <TextInput
-                  {...register("email")}
-                  label="Email"
-                  placeholder="Enter your Email"
-                  className="mb-4"
-                />
-                {errors.email && (
-                  <p className="text-danger">{errors.email.message}</p>
-                )}
-                <PasswordInput
-                  {...register("password")}
-                  label="Password"
-                  placeholder="Enter your password"
-                  className="mb-4"
-                />
-                {errors.password && (
-                  <p className="text-danger">{errors.password.message}</p>
-                )}
-                <Button type="submit" variant="filled" color="teal">
-                  Login
-                </Button>
-              </Flex>
-            </form>
-          </Flex>
-        </Card>
-      </Flex>
-    </>
+    <Flex
+      justify="center"
+      align="center"
+      style={{ minHeight: "100vh", backgroundColor: "#f3f4f6" }}
+    >
+      <Card shadow="sm" padding="lg" className="border-x-green-600">
+        <div>
+          <p
+            color="green"
+            className="text-2xl font-bold mb-6 text-center #16a34a text-emerald-600"
+          >
+            Perago Information System
+          </p>
+        </div>
+
+        <Flex gap={5} direction="column" justify="center" align="center">
+          <h2 className="text-xl font-semibold mb-6 text-center">Login</h2>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Flex direction="column" gap="lg">
+              <TextInput
+                classNames={{
+                  input:
+                    "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm",
+                  label: "block text-sm font-medium text-gray-700",
+                }}
+                {...register("email")}
+                label="Email"
+                placeholder="Enter your Email"
+                error={errors.email && errors.email.message}
+              />
+
+              <PasswordInput
+                classNames={{
+                  input:
+                    "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm",
+                  label: "block text-sm font-medium text-gray-700",
+                }}
+                {...register("password")}
+                label="Password"
+                placeholder="Enter your password"
+                error={errors.password && errors.password.message}
+              />
+
+              <Button type="submit" variant="filled" color="teal">
+                Login
+              </Button>
+            </Flex>
+          </form>
+        </Flex>
+      </Card>
+    </Flex>
   );
 };
 
-export default Login_page;
+export default LoginPage;
