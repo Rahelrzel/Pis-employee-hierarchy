@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Alert,
   Button,
   Card,
   Flex,
@@ -15,8 +16,17 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
 import classes from "./NavbarSimple.module.css";
-import { useDispatch } from "react-redux";
-import { login } from "@/redux/features/auth-slice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loginFail,
+  loginStart,
+  loginSuccess,
+  User,
+} from "@/redux/features/auth-slice";
+import ApiServices from "./services/login";
+import { AxiosError } from "axios";
+import { RootState } from "@/redux/store";
+import error from "next/error";
 
 const schema = z.object({
   email: z
@@ -31,6 +41,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const LoginPage = () => {
+  const authState = useSelector((state: RootState) => state.authReducer);
   const dispatch = useDispatch();
   const {
     register,
@@ -38,9 +49,20 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  const onSubmit = (data: FormData) => {
-    dispatch(login(data));
+  const onSubmit = async (data: FormData) => {
+    try {
+      dispatch(loginStart());
+      const userData = await ApiServices.loginUser(data.email, data.password);
+      dispatch(loginSuccess(userData));
+    } catch (err) {
+      let msg = "Login failed";
+      if (err instanceof AxiosError) {
+        msg = err.response?.data?.message;
+      }
+      dispatch(loginFail(msg));
+    }
   };
+
   return (
     <Flex
       justify="center"
@@ -85,7 +107,12 @@ const LoginPage = () => {
                 error={errors.password && errors.password.message}
               />
 
-              <Button type="submit" variant="filled" color="teal">
+              <Button
+                type="submit"
+                variant="filled"
+                color="teal"
+                loading={authState.isLoading}
+              >
                 Login
               </Button>
             </Flex>
