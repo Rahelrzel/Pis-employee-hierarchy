@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Button } from "@mantine/core";
+import { Table } from "@mantine/core";
 
 interface Employee {
   id: string;
@@ -10,42 +10,35 @@ interface Employee {
 
 interface EmployeeTableProps {
   data: Employee[];
-  // onDelete: (id: string) => void;
-  onRowClick: (id: string) => void; // Include onRowClick in props interface
+  onRowClick: (id: string) => void;
 }
 
-const EmployeeTable: React.FC<EmployeeTableProps> = ({
-  data,
-  // onDelete,
-  onRowClick,
-}) => {
+const EmployeeTable = ({ data, onRowClick }: EmployeeTableProps) => {
   return (
-    <Table>
-      <thead>
+    <Table
+      className="m-5 border border-gray-300 rounded-lg overflow-hidden"
+      striped
+      highlightOnHover
+    >
+      <thead className="bg-gray-100 border-b border-gray-300">
         <tr>
-          <th>No</th>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Salary</th>
-          {/* <th>Action</th> */}
+          <th className="p-3 text-left">No</th>
+          <th className="p-3 text-left">Name</th>
+          <th className="p-3 text-left">Description</th>
+          <th className="p-3 text-left">Salary</th>
         </tr>
       </thead>
       <tbody>
         {data.map((employee, index) => (
-          <tr key={employee.id} onClick={() => onRowClick(employee.id)}>
-            <td>{index + 1}</td>
-            <td>{employee.name}</td>
-            <td>{employee.description}</td>
-            <td>{employee.salary}</td>
-            <td>
-              {/* <Button
-                variant="outline"
-                color="green"
-                onClick={() => onDelete(employee.id)}
-              >
-                Delete
-              </Button> */}
-            </td>
+          <tr
+            key={employee.id}
+            onClick={() => onRowClick(employee.id)}
+            className="cursor-pointer hover:bg-blue-50 border-b border-gray-200"
+          >
+            <td className="p-3">{index + 1}</td>
+            <td className="p-3">{employee.name}</td>
+            <td className="p-3">{employee.description}</td>
+            <td className="p-3">{employee.salary}</td>
           </tr>
         ))}
       </tbody>

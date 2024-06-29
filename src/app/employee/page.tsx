@@ -115,7 +115,7 @@ const CeoPage = () => {
   };
 
   const handleRowClick = (id: string) => {
-    router.push(`/ceo/${id}`); // Navigate to the specific employee page
+    router.push(`/employee/${id}`); // Navigate to the specific employee page
   };
 
   const filteredRoles = filteredRole
@@ -206,29 +206,30 @@ const CeoPage = () => {
                 </Card>
               </Flex>
             </Flex>
-            <Flex direction={"row"} gap={"md"}>
-              <Input
-                classNames={{
-                  input:
-                    "border-black-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm",
-                }}
-                placeholder="Search"
-              />
-              <RoleFilter roles={roles} onFilterChange={handleFilterChange} />
-              <Container>
+            <Flex direction={"column"}>
+              <Flex direction={"row"} gap={"md"} className="ml-10">
+                <Input
+                  classNames={{
+                    input:
+                      "border-black-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm",
+                  }}
+                  placeholder="Search"
+                />
+                <RoleFilter roles={roles} onFilterChange={handleFilterChange} />
+
                 <AddStuffButton onClick={handleAddStuffClick} />
                 <FormModal
                   isOpen={isModalOpen}
                   onClose={handleCloseModal}
                   onSubmit={handleFormSubmit}
                 />
-              </Container>
+              </Flex>
+              <EmployeeTable
+                data={employees}
+                // onDelete={handleDelete}
+                onRowClick={handleRowClick}
+              />
             </Flex>
-            <EmployeeTable
-              data={employees}
-              // onDelete={handleDelete}
-              onRowClick={handleRowClick}
-            />
           </Flex>
         </main>
       </Flex>

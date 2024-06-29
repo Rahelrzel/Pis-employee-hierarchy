@@ -27,6 +27,7 @@ import ApiServices from "./services/login";
 import { AxiosError } from "axios";
 import { RootState } from "@/redux/store";
 import error from "next/error";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   email: z
@@ -41,6 +42,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const LoginPage = () => {
+  const router = useRouter();
   const authState = useSelector((state: RootState) => state.authReducer);
   const dispatch = useDispatch();
   const {
@@ -54,6 +56,7 @@ const LoginPage = () => {
       dispatch(loginStart());
       const userData = await ApiServices.loginUser(data.email, data.password);
       dispatch(loginSuccess(userData));
+      router.push(`/employee`);
     } catch (err) {
       let msg = "Login failed";
       if (err instanceof AxiosError) {
