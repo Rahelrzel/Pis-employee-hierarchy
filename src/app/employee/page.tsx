@@ -1,20 +1,43 @@
 "use client";
 import React, { useState } from "react";
 import classes from "./NavbarSimple.module.css";
-import {
-  Group,
-  Code,
-  Flex,
-  Text,
-  Card,
-  Input,
-  Button,
-  Container,
-} from "@mantine/core";
+import { Group, Flex, Text, Card, Input, Container } from "@mantine/core";
+
+import { useRouter } from "next/navigation";
 import RoleFilter from "../componenets/roleFilter";
 import AddStuffButton from "../componenets/addStuffButton";
-import FormModal from "../componenets/formModal";
 import EmployeeTable from "../componenets/table";
+import FormModal from "../componenets/formModal";
+
+const roles = [
+  "CEO",
+  "CTO",
+  "Project Manager",
+  "Product Owner",
+  "Tech Lead",
+  "Frontend Developer",
+  "Backend Developer",
+  "DevOps Engineer",
+  "QA Engineer",
+  "Scrum Master",
+  "CFO",
+  "Chief Accountant",
+  "Financial Analyst",
+  "Account and Payable",
+  "Internal Audit",
+  "COO",
+  "Product Manager",
+  "Operation Manager",
+  "Customer Relation",
+  "HR",
+];
+
+const data = [
+  { link: "", label: "Home" },
+  { link: "", label: "Employees" },
+  { link: "", label: "Roles" },
+];
+
 const tableData = [
   {
     id: "1",
@@ -48,36 +71,19 @@ const tableData = [
   },
 ];
 
-const roles = [
-  "CEO",
-  "CTO",
-  "Project Manager",
-  "Product Owner",
-  "Tech Lead",
-  "Frontend Developer",
-  "Backend Developer",
-  "DevOps Engineer",
-  "QA Engineer",
-  "Scrum Master",
-  "CFO",
-  "Chief Accountant",
-  "Financial Analyst",
-  "Account and Payable",
-  "Internal Audit",
-  "COO",
-  "Product Manager",
-  "Operation Manager",
-  "Customer Relation",
-  "HR",
-];
+const fetchEmployeeDetails = (id: String) => {
+  return new Promise((resolve) => {
+    const employee = tableData.find((emp) => emp.id === id);
+    setTimeout(() => resolve(employee), 1000); // Simulate network delay
+  });
+};
 
-const data = [
-  { link: "", label: "Home" },
-  { link: "", label: "Employees" },
-  { link: "", label: "Roles" },
-];
 const CeoPage = () => {
+  const router = useRouter();
+  const [employees, setEmployees] = useState(tableData);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filteredRole, setFilteredRole] = useState<string>("");
+  const [active, setActive] = useState("Billing");
 
   const handleAddStuffClick = () => {
     setIsModalOpen(true);
@@ -88,20 +94,33 @@ const CeoPage = () => {
   };
 
   const handleFormSubmit = (values: { name: string; description: string }) => {
-    console.log("Form submitted:", values);
+    const newEmployee = {
+      id: (employees.length + 1).toString(),
+      name: values.name,
+      description: values.description,
+      salary: "$0", // Default salary or adjust as needed
+    };
+    setEmployees((prevData) => [...prevData, newEmployee]);
     handleCloseModal();
   };
-  const [filteredRole, setFilteredRole] = useState<string>("");
+
+  // const handleDelete = (id: string) => {
+  //   setEmployees((prevData) =>
+  //     prevData.filter((employee) => employee.id !== id)
+  //   );
+  // };
 
   const handleFilterChange = (selectedRole: string) => {
     setFilteredRole(selectedRole);
   };
 
+  const handleRowClick = (id: string) => {
+    router.push(`/ceo/${id}`); // Navigate to the specific employee page
+  };
+
   const filteredRoles = filteredRole
     ? roles.filter((role) => role.includes(filteredRole))
     : roles;
-
-  const [active, setActive] = useState("Billing");
 
   const links = data.map((item) => (
     <a
@@ -117,6 +136,7 @@ const CeoPage = () => {
       <span>{item.label}</span>
     </a>
   ));
+
   return (
     <>
       <Flex style={{ minHeight: "100vh" }}>
@@ -166,7 +186,7 @@ const CeoPage = () => {
                 className={classes.mainContent}
               >
                 <Card bg={"green"}>
-                  <p className="text-white font-medium text-xl	">
+                  <p className="text-white font-medium text-xl">
                     Total Employees
                   </p>
                   <p className="text-white font-medium text-2xl">21</p>
@@ -179,15 +199,14 @@ const CeoPage = () => {
                 className={classes.mainContent}
               >
                 <Card className="border-solid border-green-700">
-                  <p className="text-emerald-600 font-medium text-xl	">
+                  <p className="text-emerald-600 font-medium text-xl">
                     Employees Directly Managed
                   </p>
-                  <p className="text-emerald-600 font-medium text-2xl	">4</p>
+                  <p className="text-emerald-600 font-medium text-2xl">4</p>
                 </Card>
               </Flex>
             </Flex>
             <Flex direction={"row"} gap={"md"}>
-              {" "}
               <Input
                 classNames={{
                   input:
@@ -205,7 +224,11 @@ const CeoPage = () => {
                 />
               </Container>
             </Flex>
-            <EmployeeTable data={tableData} />
+            <EmployeeTable
+              data={employees}
+              // onDelete={handleDelete}
+              onRowClick={handleRowClick}
+            />
           </Flex>
         </main>
       </Flex>

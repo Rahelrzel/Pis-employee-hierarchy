@@ -1,7 +1,5 @@
-// components/EmployeeTable.tsx
-
 import React from "react";
-import { Table, ScrollArea, Text } from "@mantine/core";
+import { Table, Button } from "@mantine/core";
 
 interface Employee {
   id: string;
@@ -12,37 +10,47 @@ interface Employee {
 
 interface EmployeeTableProps {
   data: Employee[];
+  // onDelete: (id: string) => void;
+  onRowClick: (id: string) => void; // Include onRowClick in props interface
 }
 
-function EmployeeTable({ data }: EmployeeTableProps) {
-  const rows = data.map((item) => (
-    <Table.Tr key={item.id}>
-      <Table.Td>{item.id}</Table.Td>
-      <Table.Td>
-        <Text size="sm" fw={500}>
-          {item.name}
-        </Text>
-      </Table.Td>
-      <Table.Td>{item.description}</Table.Td>
-      <Table.Td>{item.salary}</Table.Td>
-    </Table.Tr>
-  ));
-
+const EmployeeTable: React.FC<EmployeeTableProps> = ({
+  data,
+  // onDelete,
+  onRowClick,
+}) => {
   return (
-    <ScrollArea>
-      <Table miw={800} verticalSpacing="sm">
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>NO</Table.Th>
-            <Table.Th>Name</Table.Th>
-            <Table.Th>Description</Table.Th>
-            <Table.Th>Salary</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
-    </ScrollArea>
+    <Table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Salary</th>
+          {/* <th>Action</th> */}
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((employee, index) => (
+          <tr key={employee.id} onClick={() => onRowClick(employee.id)}>
+            <td>{index + 1}</td>
+            <td>{employee.name}</td>
+            <td>{employee.description}</td>
+            <td>{employee.salary}</td>
+            <td>
+              {/* <Button
+                variant="outline"
+                color="green"
+                onClick={() => onDelete(employee.id)}
+              >
+                Delete
+              </Button> */}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
   );
-}
+};
 
 export default EmployeeTable;
