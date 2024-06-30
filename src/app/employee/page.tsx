@@ -1,10 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import classes from "../../componenets/NavbarSimple.module.css";
-import { Group, Flex, Text, Card, Input, Container } from "@mantine/core";
-import { useRouter, useSelectedLayoutSegment } from "next/navigation";
+import { Flex, Card, Input, Button, Loader, Alert } from "@mantine/core";
+import { useRouter } from "next/navigation";
 import RoleFilter from "../../componenets/roleFilter";
-import AddStuffButton from "../../componenets/addStuffButton";
 import EmployeeTable from "../../componenets/table";
 import FormModal from "../../componenets/formModal";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,109 +15,16 @@ import {
 } from "@/redux/features/employee-slice";
 import { getEmployeesManagedByMe } from "@/services/employee";
 import { AxiosError } from "axios";
-import { Sidebar } from "@/componenets/Sidebar";
-
-const roles = [
-	"CEO",
-	"CTO",
-	"Project Manager",
-	"Product Owner",
-	"Tech Lead",
-	"Frontend Developer",
-	"Backend Developer",
-	"DevOps Engineer",
-	"QA Engineer",
-	"Scrum Master",
-	"CFO",
-	"Chief Accountant",
-	"Financial Analyst",
-	"Account and Payable",
-	"Internal Audit",
-	"COO",
-	"Product Manager",
-	"Operation Manager",
-	"Customer Relation",
-	"HR",
-];
-
-const data = [
-	{ link: "", label: "Home" },
-	{ link: "", label: "Employees" },
-	{ link: "", label: "Roles" },
-];
-
-const tableData = [
-	{
-		id: "1",
-		name: "Robert Wolfkisser",
-		description: "Engineer",
-		salary: "$80,000",
-	},
-	{
-		id: "2",
-		name: "Jill Jailbreaker",
-		description: "Engineer",
-		salary: "$85,000",
-	},
-	{
-		id: "3",
-		name: "Henry Silkeater",
-		description: "Designer",
-		salary: "$90,000",
-	},
-	{
-		id: "4",
-		name: "Bill Horsefighter",
-		description: "Designer",
-		salary: "$95,000",
-	},
-	{
-		id: "5",
-		name: "Jeremy Footviewer",
-		description: "Manager",
-		salary: "$100,000",
-	},
-];
-
-const fetchEmployeeDetails = (id: String) => {
-	return new Promise((resolve) => {
-		const employee = tableData.find((emp) => emp.id === id);
-		setTimeout(() => resolve(employee), 1000); // Simulate network delay
-	});
-};
-
+import { useEmployees } from "@/hooks/useEmployees";
 const CeoPage = () => {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const authState = useSelector((state: RootState) => state.authReducer);
 	const user = authState.user!;
-	const employeeState = useSelector(
-		(state: RootState) => state.employeeReducer
-	);
-	const [employees, setEmployees] = useState(tableData);
+	const employeeState = useEmployees();
 	const [keyword, setKeyword] = useState("");
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [filteredRole, setFilteredRole] = useState<string>("");
-	const [active, setActive] = useState("Billing");
-
-	useEffect(() => {
-		const load = async () => {
-			dispatch(loadEmployeesStart());
-			try {
-				const employees = await getEmployeesManagedByMe(
-					authState.user!.token
-				);
-				dispatch(loadEmployeeSuccess(employees));
-			} catch (error) {
-				let msg = "Unable to load employees, try again";
-				if (error instanceof AxiosError) {
-					msg = error.response?.data["message"];
-				}
-				dispatch(loadEmployeeError(msg));
-			}
-		};
-		load();
-	}, [authState.user, dispatch]);
 
 	const handleAddStuffClick = () => {
 		setIsModalOpen(true);
@@ -126,20 +32,6 @@ const CeoPage = () => {
 
 	const handleCloseModal = () => {
 		setIsModalOpen(false);
-	};
-
-	const handleFormSubmit = (values: {
-		name: string;
-		description: string;
-	}) => {
-		const newEmployee = {
-			id: (employees.length + 1).toString(),
-			name: values.name,
-			description: values.description,
-			salary: "$0", // Default salary or adjust as needed
-		};
-		setEmployees((prevData) => [...prevData, newEmployee]);
-		handleCloseModal();
 	};
 
 	const handleFilterChange = (selectedRole: string) => {
@@ -151,11 +43,23 @@ const CeoPage = () => {
 	};
 
 	if (employeeState.isLoading) {
-		return <>Loading...</>;
+		return (
+			<Flex direction={"column"} p="lg" className="w-full h-full">
+				<Card>
+					<Loader color="green" mb="lg" />
+					Loading...
+				</Card>
+			</Flex>
+		);
 	}
 
 	if (employeeState.error) {
-		return <>{employeeState.error}</>;
+		return (
+			<Flex p={"lg"} className="w-full h-full">
+				<Alert></Alert>
+				{employeeState.error}
+			</Flex>
+		);
 	}
 
 	let data = employeeState.data.filter((employee) =>
@@ -167,7 +71,7 @@ const CeoPage = () => {
 	}
 
 	return (
-		<main className={classes.main}>
+		<main className={"flex-1 p-10"}>
 			<Flex direction={"column"} gap={"xl"}>
 				<p className="text-4xl font-medium #16a34a text-emerald-600">
 					Welcome {user.firstName + " " + user.lastName},
@@ -204,8 +108,12 @@ const CeoPage = () => {
 						</Card>
 					</Flex>
 				</Flex>
-				<Flex direction={"column"}>
-					<Flex direction={"row"} gap={"md"} className="mb-5 mt-5">
+				<Flex direction={"column"} className="w-full">
+					<Flex
+						direction={"row"}
+						gap={"md"}
+						className="mb-5 mt-5 w-full"
+					>
 						<Input
 							classNames={{
 								input: "border-black-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm",
@@ -215,19 +123,16 @@ const CeoPage = () => {
 							onChange={(e) => setKeyword(e.target.value)}
 						/>
 						<RoleFilter onFilterChange={handleFilterChange} />
-
-						<AddStuffButton onClick={handleAddStuffClick} />
+						<div className="flex-1"></div>
+						<Button color="green" onClick={handleAddStuffClick}>
+							Add Stuff
+						</Button>
 						<FormModal
 							isOpen={isModalOpen}
 							onClose={handleCloseModal}
-							onSubmit={() => {}}
 						/>
 					</Flex>
-					<EmployeeTable
-						data={data}
-						// onDelete={handleDelete}
-						onRowClick={handleRowClick}
-					/>
+					<EmployeeTable data={data} onRowClick={handleRowClick} />
 				</Flex>
 			</Flex>
 		</main>

@@ -44,12 +44,11 @@ const EmployeeTable = ({ data, onRowClick }: EmployeeTableProps) => {
 				<Table.Tr>
 					<Table.Th className="p-3 text-left">No</Table.Th>
 					<Table.Th className="p-3 text-left">Name</Table.Th>
-					<Table.Th className="p-3 text-left">Email</Table.Th>
 					<Table.Th className="p-3 text-left">Role</Table.Th>
-					<Table.Th className="p-3 text-left">Description</Table.Th>
-					<Table.Th className="p-3 text-left">Salary</Table.Th>
 					<Table.Th className="p-3 text-left">Registered on</Table.Th>
-					<Table.Th className="p-3 text-left">Actions</Table.Th>
+					<Table.Th className="p-3 text-left" align="center">
+						Actions
+					</Table.Th>
 				</Table.Tr>
 			</Table.Thead>
 			<Table.Tbody>
@@ -65,25 +64,13 @@ const EmployeeTable = ({ data, onRowClick }: EmployeeTableProps) => {
 						>
 							{employee.firstName + " " + employee.lastName}
 						</Table.Td>
-						<Table.Td className="p-3">
-							<Anchor
-								href={`mailto:${employee.email}`}
-								variant="white"
-								size="sm"
-								target="_blank"
-							>
-								{employee.email}
-							</Anchor>
-						</Table.Td>
+
 						<Table.Td className="p-3">
 							<Badge variant="light" color="green">
 								{employee.role.name}
 							</Badge>
 						</Table.Td>
-						<Table.Td className="p-3">{employee.desc}</Table.Td>
-						<Table.Td className="p-3">
-							{employee.salary ? employee.salary + "ETB" : ""}
-						</Table.Td>
+
 						<Table.Td className="p-3">
 							{dayjs(employee.createdAt).format("MMMM DD,YYYY")}
 						</Table.Td>

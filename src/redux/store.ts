@@ -2,6 +2,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./features/auth-slice";
 import employeeReducer from "./features/employee-slice";
+import managedEmployeeReducer from "./features/managedEmployee-slice";
 import roleReducer from "./features/role-slice";
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
 		authReducer,
 		employeeReducer,
 		roleReducer,
+		managedEmployeeReducer,
 	},
 });
 
