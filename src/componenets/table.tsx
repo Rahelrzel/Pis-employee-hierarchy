@@ -44,9 +44,10 @@ const EmployeeTable = ({ data, onRowClick }: EmployeeTableProps) => {
 				<Table.Tr>
 					<Table.Th className="p-3 text-left">No</Table.Th>
 					<Table.Th className="p-3 text-left">Name</Table.Th>
+					<Table.Th className="p-3 text-left">Email</Table.Th>
 					<Table.Th className="p-3 text-left">Role</Table.Th>
 					<Table.Th className="p-3 text-left">Registered on</Table.Th>
-					<Table.Th className="p-3 text-left" align="center">
+					<Table.Th className="p-3" align="right">
 						Actions
 					</Table.Th>
 				</Table.Tr>
@@ -63,6 +64,14 @@ const EmployeeTable = ({ data, onRowClick }: EmployeeTableProps) => {
 							onClick={() => onRowClick(employee.id)}
 						>
 							{employee.firstName + " " + employee.lastName}
+						</Table.Td>
+						<Table.Td
+							className="p-3 cursor-pointer text-blue-800"
+							onClick={() => onRowClick(employee.id)}
+						>
+							<Anchor href={`mailto:${employee.email}`}>
+								{employee.email}
+							</Anchor>
 						</Table.Td>
 
 						<Table.Td className="p-3">

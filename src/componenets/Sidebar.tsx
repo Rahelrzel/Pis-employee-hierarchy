@@ -1,11 +1,14 @@
-import { Group, Text } from "@mantine/core";
+import { Button, Group, Text } from "@mantine/core";
 import classes from "./NavbarSimple.module.css";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/features/auth-slice";
 
 export const Sidebar = () => {
+	const dispatch = useDispatch();
 	const data = [
 		{ link: "/employee", label: "Home" },
-		{ link: "/roles", label: "Roles" },
+		{ link: "/employee/roles", label: "Roles" },
 	];
 	return (
 		<nav className={classes.navbar}>
@@ -41,9 +44,11 @@ export const Sidebar = () => {
 
 			<div className={classes.footer}>
 				<a
-					href="#"
 					className={classes.link}
-					onClick={(event) => event.preventDefault()}
+					onClick={(event) => {
+						event.preventDefault();
+						dispatch(logout());
+					}}
 				>
 					<span>Logout</span>
 				</a>

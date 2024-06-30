@@ -40,10 +40,45 @@ const roleSlice = createSlice({
 			state.isLoading = false;
 			state.error = action.payload;
 		},
+		createRoleStart: (state) => {
+			state.createRole.isLoading = true;
+			state.createRole.error = undefined;
+		},
+		createRoleSuccess: (state, action: PayloadAction<Role>) => {
+			state.createRole.isLoading = false;
+			state.data.push(action.payload);
+		},
+		createRoleError: (state, action: PayloadAction<string>) => {
+			state.createRole.isLoading = false;
+			state.createRole.error = action.payload;
+		},
+		deleteRoleStart: (state) => {
+			state.deleteRole.isLoading = true;
+			state.deleteRole.error = undefined;
+		},
+		deleteRoleSuccess: (state, action: PayloadAction<Role>) => {
+			state.deleteRole.isLoading = false;
+			state.data = state.data.filter(
+				(role) => role.id !== action.payload.id
+			);
+		},
+		deleteRoleError: (state, action: PayloadAction<string>) => {
+			state.deleteRole.isLoading = false;
+			state.deleteRole.error = action.payload;
+		},
 	},
 });
 
-export const { loadRoleError, loadRoleSuccess, loadRolesStart } =
-	roleSlice.actions;
+export const {
+	loadRoleError,
+	loadRoleSuccess,
+	loadRolesStart,
+	createRoleError,
+	createRoleStart,
+	createRoleSuccess,
+	deleteRoleError,
+	deleteRoleStart,
+	deleteRoleSuccess,
+} = roleSlice.actions;
 
 export default roleSlice.reducer;

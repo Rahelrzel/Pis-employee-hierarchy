@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import classes from "../../componenets/NavbarSimple.module.css";
 import { Flex, Card, Input, Button, Loader, Alert } from "@mantine/core";
 import { useRouter } from "next/navigation";
@@ -8,17 +8,10 @@ import EmployeeTable from "../../componenets/table";
 import FormModal from "../../componenets/formModal";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import {
-	loadEmployeeError,
-	loadEmployeeSuccess,
-	loadEmployeesStart,
-} from "@/redux/features/employee-slice";
-import { getEmployeesManagedByMe } from "@/services/employee";
-import { AxiosError } from "axios";
 import { useEmployees } from "@/hooks/useEmployees";
+
 const CeoPage = () => {
 	const router = useRouter();
-	const dispatch = useDispatch();
 	const authState = useSelector((state: RootState) => state.authReducer);
 	const user = authState.user!;
 	const employeeState = useEmployees();
