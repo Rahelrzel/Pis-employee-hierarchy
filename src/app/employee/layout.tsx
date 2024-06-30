@@ -1,9 +1,17 @@
+"use client";
 import { RootState } from "@/redux/store";
-import { ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { ReactNode, useEffect } from "react";
 import { useSelector } from "react-redux";
 
+export default function Layout({ children }: { children: ReactNode }) {
+  const router = useRouter();
+  const { user } = useSelector((state: RootState) => state.authReducer);
 
-export default function Layout({children}: {children: ReactNode}) {
-    const { user } = useSelector((state: RootState) => state.authState))
-    return <>{children}</>;
+  useEffect(() => {
+    if (!user) {
+      router.push(`/`);
+    }
+  }, [user]);
+  return <>{children}</>;
 }
