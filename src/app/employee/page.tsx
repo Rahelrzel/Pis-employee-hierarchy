@@ -220,7 +220,7 @@ const CeoPage = () => {
 						<FormModal
 							isOpen={isModalOpen}
 							onClose={handleCloseModal}
-							onSubmit={handleFormSubmit}
+							onSubmit={() => {}}
 						/>
 					</Flex>
 					<EmployeeTable

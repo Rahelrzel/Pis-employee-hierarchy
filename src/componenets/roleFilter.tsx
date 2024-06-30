@@ -9,37 +9,15 @@ import {
 } from "@/redux/features/role-slice";
 import { getRoles } from "@/services/roles";
 import { AxiosError } from "axios";
+import { useRoles } from "@/hooks/useRoles";
 
 interface RoleFilterProps {
 	onFilterChange: (selectedRole: string) => void;
 }
 
 function RoleFilter({ onFilterChange }: RoleFilterProps) {
-	const {
-		data: roles,
-		isLoading,
-		error,
-	} = useSelector((state: RootState) => state.roleReducer);
-	const dispatch = useDispatch();
-	const { user } = useSelector((state: RootState) => state.authReducer);
+	const { data: roles, isLoading, error } = useRoles();
 	const [selectedRole, setSelectedRole] = useState<string | null>(null);
-
-	useEffect(() => {
-		const load = async () => {
-			dispatch(loadRolesStart());
-			try {
-				const roles = await getRoles(user!.token);
-				dispatch(loadRoleSuccess(roles));
-			} catch (error) {
-				let message = "unable to load roles";
-				if (error instanceof AxiosError) {
-					message = error.response?.data["message"];
-				}
-				dispatch(loadRoleError(message));
-			}
-		};
-		load();
-	}, [dispatch, user]);
 
 	const handleChange = (value: string | null) => {
 		setSelectedRole(value);

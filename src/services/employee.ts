@@ -7,3 +7,13 @@ export const getEmployeesManagedByMe = async (token: string) => {
 		.then((res) => res.data);
 	return response;
 };
+
+export const createEmployee = async (
+	token: string,
+	employee: Omit<Employee, "id" | "role" | "createdAt"> & { roleId: string }
+) => {
+	const response = await apiWithToken(token)
+		.post<Employee>("/employee", employee)
+		.then((res) => res.data);
+	return response;
+};

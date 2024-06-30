@@ -48,9 +48,10 @@ const employeesSlice = createSlice({
 		createEmployeeStart: (state) => {
 			state.createState.isLoading = true;
 		},
-		createEmployeeSuccess: (state) => {
+		createEmployeeSuccess: (state, action: PayloadAction<Employee>) => {
 			state.createState.isLoading = false;
 			state.createState.error = undefined;
+			state.data.push(action.payload);
 		},
 		createEmployeeError: (state, action: PayloadAction<string>) => {
 			state.createState.isLoading = false;
