@@ -12,10 +12,8 @@ import {
 } from "@mantine/core";
 import React from "react";
 import { z } from "zod";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
-import classes from "./NavbarSimple.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	loginFail,
@@ -23,11 +21,10 @@ import {
 	loginSuccess,
 	User,
 } from "@/redux/features/auth-slice";
-import ApiServices from "./services/login";
+import ApiServices from "../services/login";
 import { AxiosError } from "axios";
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
-import { IconError404 } from "@tabler/icons-react";
 
 const schema = z.object({
 	email: z
