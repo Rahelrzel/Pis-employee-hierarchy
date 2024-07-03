@@ -14,7 +14,7 @@ const EmployeeDetailsPage = () => {
   const router = useRouter();
   const { data: employees } = useGetEmployeeQuery();
   const id = params.id.toString();
-  const employee = employee.find((employee) => employee.id === id);
+  const employee = employees?.find((employee) => employee.id === id);
   const { data, error, isLoading } = useGetManagedEmployeeQuery(id);
 
   if (!employee) {
@@ -94,7 +94,7 @@ const EmployeeDetailsPage = () => {
           color="red"
           icon={<IconInfoCircle />}
         >
-          {error}
+          {error.toString()}
         </Alert>
       )}
     </main>

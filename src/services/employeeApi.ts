@@ -17,12 +17,12 @@ export const employeeApi = createApi({
   tagTypes: ["Employee"],
   endpoints: (builder) => ({
     getEmployee: builder.query<Employee[], void>({
-      query: () => "/employee/${id}/manages",
+      query: () => `/employee/manages`,
       providesTags: ["Employee"],
     }),
     createEmployee: builder.mutation<Employee, Partial<Employee>>({
       query: (newEmployee) => ({
-        url: "/employee/manages",
+        url: `/employee`,
         method: "POST",
         body: newEmployee,
       }),
@@ -38,4 +38,4 @@ export const employeeApi = createApi({
   }),
 });
 
-export const { useGetEmployeeQuery } = employeeApi;
+export const { useGetEmployeeQuery, useCreateEmployeeMutation } = employeeApi;

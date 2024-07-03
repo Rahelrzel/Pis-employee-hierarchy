@@ -16,8 +16,8 @@ export const managedEmployeeApi = createApi({
   }),
   tagTypes: ["ManagedEmployee"],
   endpoints: (builder) => ({
-    getManagedEmployee: builder.query<Employee[], void>({
-      query: (id) => `employee/${id}/managed`,
+    getManagedEmployee: builder.query<Employee[], string>({
+      query: (id) => `/employee/${id}/managed`,
       providesTags: ["ManagedEmployee"],
     }),
   }),
