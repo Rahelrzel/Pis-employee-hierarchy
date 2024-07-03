@@ -60,16 +60,16 @@ const EmployeeTable = ({ data, onRowClick }: EmployeeTableProps) => {
 					>
 						<Table.Td className="p-3">{index + 1}</Table.Td>
 						<Table.Td
-							className="p-3 cursor-pointer text-blue-800"
+							className="p-3 cursor-pointer text-green-500"
 							onClick={() => onRowClick(employee.id)}
 						>
 							{employee.firstName + " " + employee.lastName}
 						</Table.Td>
 						<Table.Td
-							className="p-3 cursor-pointer text-blue-800"
+							className="p-3 cursor-pointer text-green-800"
 							onClick={() => onRowClick(employee.id)}
 						>
-							<Anchor href={`mailto:${employee.email}`}>
+							<Anchor href={`mailto:${employee.email}`} size="sm">
 								{employee.email}
 							</Anchor>
 						</Table.Td>

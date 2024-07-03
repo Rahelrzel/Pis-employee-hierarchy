@@ -14,3 +14,7 @@ export interface Role {
 	name: string;
 	count?: number;
 }
+
+export interface EmployeeNode extends Employee {
+	children: EmployeeNode[];
+}

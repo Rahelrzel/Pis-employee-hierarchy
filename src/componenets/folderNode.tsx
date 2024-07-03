@@ -1,65 +1,71 @@
 "use client";
 
-import { Node } from "../types/node";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-
-import { Box, Card, Flex, Text } from "@mantine/core";
+import { Box, Card, Collapse, Flex, NavLink, Text } from "@mantine/core";
 import { useState } from "react";
-import { TreeNode as TreeNodeType } from "../types/tree";
-import { useTreeData } from "@/hooks/useTree";
+import {
+	IconChevronDown,
+	IconChevronUp,
+	IconUserCircle,
+} from "@tabler/icons-react";
+import { useGetAllEmployeesQuery } from "@/services/employeeApi";
+import { EmployeeNode } from "@/types/employee";
 
 export interface TreeNodeProps {
-  node: TreeNodeType;
+	node: EmployeeNode;
 }
 
 const TreeNode = ({ node }: TreeNodeProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 
-  const toggleOpen = () => {
-    setIsOpen(!isOpen);
-  };
+	const toggleOpen = () => {
+		setIsOpen(!isOpen);
+	};
 
-  return (
-    <div className="my-2">
-      <Card
-        onClick={toggleOpen}
-        className="flex items-center justify-between w-full px-4 py-2 bg-green-600 text-white rounded-lg cursor-pointer"
-      >
-        <Box>
-          <Text>{`${node.firstName} ${node.lastName}`}</Text>
-          <Text size="sm" color="gray.200">
-            {node.role.name}
-          </Text>
-        </Box>
-        {node.children.length > 0 && (
-          <FontAwesomeIcon icon={isOpen ? faChevronUp : faChevronDown} />
-        )}
-      </Card>
-      {isOpen && node.children.length > 0 && (
-        <div className="ml-4">
-          {node.children.map((child) => (
-            <TreeNode key={child.id} node={child} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
+	const childrens = node.children.toSorted(
+		(a, b) => a.children.length - b.children.length
+	);
+
+	return (
+		<div className="my-2 p-2 w-full bg-gray-50">
+			<NavLink
+				active={isOpen}
+				variant="subtle"
+				color="green"
+				onClick={toggleOpen}
+				label={`${node.firstName} ${node.lastName}`}
+				description={node.role.name}
+				rightSection={
+					node.children.length > 0 ? (
+						isOpen ? (
+							<IconChevronUp size={16} />
+						) : (
+							<IconChevronDown size={16} />
+						)
+					) : undefined
+				}
+			></NavLink>
+			<Collapse in={isOpen} pl={"lg"}>
+				{childrens.map((child) => (
+					<TreeNode key={child.id} node={child} />
+				))}
+			</Collapse>
+		</div>
+	);
 };
 
 function TreeComponent() {
-  const { data, isLoading, error } = useTreeData();
+	const { data, isLoading, error } = useGetAllEmployeesQuery();
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+	if (isLoading) return <div>Loading...</div>;
+	if (error) return <div>Error: {error.toString()}</div>;
 
-  return (
-    <div>
-      {data.map((node) => (
-        <TreeNode key={node.id} node={node} />
-      ))}
-    </div>
-  );
+	return (
+		<div>
+			{data?.map((node) => (
+				<TreeNode key={node.id} node={node} />
+			))}
+		</div>
+	);
 }
 
 export default TreeComponent;
