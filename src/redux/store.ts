@@ -1,19 +1,29 @@
 "use client";
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./features/auth-slice";
-import employeeReducer from "./features/employee-slice";
-import managedEmployeeReducer from "./features/managedEmployee-slice";
-import roleReducer from "./features/role-slice";
+
 import treeReducer from "./features/tree-Slice";
+import { rolesApi } from "@/services/rolesApi";
+import { managedEmployeeApi } from "@/services/managedEmployeeApi";
+import { employeeApi } from "@/services/employeeApi";
 
 export const store = configureStore({
   reducer: {
     authReducer,
-    employeeReducer,
-    roleReducer,
-    managedEmployeeReducer,
+
+    [employeeApi.reducerPath]: employeeApi.reducer,
+    [rolesApi.reducerPath]: rolesApi.reducer,
+    [managedEmployeeApi.reducerPath]: managedEmployeeApi.reducer,
+
     treeReducer,
   },
+
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(
+      rolesApi.middleware,
+      employeeApi.middleware,
+      managedEmployeeApi.middleware
+    ),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
